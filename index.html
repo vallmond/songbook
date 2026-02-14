@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Songbook</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app" id="appRoot">
+      <aside class="sidebar">
+        <header class="sidebar__header">
+          <h1>Библиотека аккордов</h1>
+          <p>Песни</p>
+        </header>
+
+        <section class="songs">
+          <h2>Песни</h2>
+          <ul id="songList" class="song-list"></ul>
+        </section>
+      </aside>
+
+      <main class="viewer">
+        <header class="viewer__header">
+          <h2 id="songTitle">Загрузка...</h2>
+          <div class="viewer__meta" id="songMeta"></div>
+          <div class="viewer__chords">
+            <div class="chord-inline-row">
+              <span id="chordSummary" class="chord-summary"></span>
+              <button id="chordDetailsToggleButton" type="button">Детали аккордов</button>
+            </div>
+            <div id="chordDetails" class="chord-details" hidden>
+              <div id="chordList" class="chord-list"></div>
+              <div id="chordDiagram" class="chord-diagram"></div>
+            </div>
+          </div>
+          <div class="viewer__controls">
+            <button id="readerToggleButton" type="button">Режим чтения</button>
+            <button id="instrumentalToggleButton" type="button">Скрыть проигрыши</button>
+          </div>
+        </header>
+        <pre id="songContent" class="song-content"></pre>
+      </main>
+    </div>
+
+    <button id="exitReaderButton" class="exit-reader-button" type="button">Выйти из чтения</button>
+
+    <template id="songListItemTemplate">
+      <li>
+        <button type="button" class="song-list__item"></button>
+      </li>
+    </template>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,204 @@
+{
+  "version": 2,
+  "updatedAt": "2026-02-14T17:35:00.789Z",
+  "songs": [
+    {
+      "id": "e9c0f426-ec34-453b-b34c-95b344c06a5e",
+      "slug": "amdm-2",
+      "title": "Передайте это Гарри Поттеру, если вдруг его встретите",
+      "artist": "Сплин",
+      "sourceUrl": "amdm://2.html",
+      "sourceHost": "amdm",
+      "importedAt": "2026-02-14T17:35:00.770Z",
+      "format": "cho",
+      "choFile": "songs/amdm/2.cho"
+    },
+    {
+      "id": "5a820575-cef6-4419-9553-1f41e9946ea0",
+      "slug": "amdm-3",
+      "title": "Кукла колдуна",
+      "artist": "Король и Шут",
+      "sourceUrl": "amdm://3.html",
+      "sourceHost": "amdm",
+      "importedAt": "2026-02-14T17:35:00.770Z",
+      "format": "cho",
+      "choFile": "songs/amdm/3.cho"
+    },
+    {
+      "id": "f87cc35f-5608-4019-9e4a-8c6d58a7a4a6",
+      "slug": "amdm-5nizza-5",
+      "title": "Я солдат",
+      "artist": "5nizza",
+      "sourceUrl": "amdm://5.html",
+      "sourceHost": "amdm",
+      "importedAt": "2026-02-14T17:35:00.773Z",
+      "format": "cho",
+      "choFile": "songs/amdm/5.cho"
+    },
+    {
+      "id": "a83649de-4292-4945-9a67-6da850450f4f",
+      "slug": "amdm-6",
+      "title": "Я свободен",
+      "artist": "Валерий Кипелов",
+      "sourceUrl": "amdm://6.html",
+      "sourceHost": "amdm",
+      "importedAt": "2026-02-14T17:35:00.774Z",
+      "format": "cho",
+      "choFile": "songs/amdm/6.cho"
+    },
+    {
+      "id": "950f8262-ac7e-49c7-898d-c154f9cbe446",
+      "slug": "amdm-8",
+      "title": "Что такое осень",
+      "artist": "ДДТ",
+      "sourceUrl": "amdm://8.html",
+      "sourceHost": "amdm",
+      "importedAt": "2026-02-14T17:35:00.776Z",
+      "format": "cho",
+      "choFile": "songs/amdm/8.cho"
+    },
+    {
+      "id": "c4371d3d-38a4-44bb-84eb-f977e4170644",
+      "slug": "amdm-9",
+      "title": "Выхода нет",
+      "artist": "Сплин",
+      "sourceUrl": "amdm://9.html",
+      "sourceHost": "amdm",
+      "importedAt": "2026-02-14T17:35:00.777Z",
+      "format": "cho",
+      "choFile": "songs/amdm/9.cho"
+    },
+    {
+      "id": "a141402c-e26c-46e7-9252-741ffdec0fe2",
+      "slug": "amdm-n-r-m-1",
+      "title": "Тры чарапахи",
+      "artist": "N.R.M.",
+      "sourceUrl": "amdm://1.html",
+      "sourceHost": "amdm",
+      "importedAt": "2026-02-14T17:35:00.767Z",
+      "format": "cho",
+      "choFile": "songs/amdm/1.cho"
+    },
+    {
+      "id": "dcf11238-4432-4f91-995f-fd17f4e9322e",
+      "slug": "pesnipodgitaru-dalshe-deystvovat-budem-myi",
+      "title": "ДАЛЬШЕ ДЕЙСТВОВАТЬ БУДЕМ МЫ",
+      "artist": "Кино",
+      "sourceUrl": "pesnipodgitaru://dalshe-deystvovat-budem-myi.html",
+      "sourceHost": "pesnipodgitaru",
+      "importedAt": "2026-02-14T17:35:00.779Z",
+      "format": "cho",
+      "choFile": "songs/pesnipodgitaru/dalshe-deystvovat-budem-myi.cho"
+    },
+    {
+      "id": "55cfe3c5-9f90-4ea6-a75c-06982bc371f0",
+      "slug": "pesnipodgitaru-gruppa-krovi",
+      "title": "ГРУППА КРОВИ",
+      "artist": "Кино",
+      "sourceUrl": "pesnipodgitaru://gruppa-krovi.html",
+      "sourceHost": "pesnipodgitaru",
+      "importedAt": "2026-02-14T17:35:00.781Z",
+      "format": "cho",
+      "choFile": "songs/pesnipodgitaru/gruppa-krovi.cho"
+    },
+    {
+      "id": "e66447a2-0a4c-4ee9-9643-6885c85c51f3",
+      "slug": "pesnipodgitaru-konchitsya-leto",
+      "title": "КОНЧИТСЯ ЛЕТО",
+      "artist": "Кино",
+      "sourceUrl": "pesnipodgitaru://konchitsya-leto.html",
+      "sourceHost": "pesnipodgitaru",
+      "importedAt": "2026-02-14T17:35:00.782Z",
+      "format": "cho",
+      "choFile": "songs/pesnipodgitaru/konchitsya-leto.cho"
+    },
+    {
+      "id": "d25559eb-860d-4d87-add1-464842df8701",
+      "slug": "pesnipodgitaru-kukushka",
+      "title": "КУКУШКА",
+      "artist": "Кино",
+      "sourceUrl": "pesnipodgitaru://kukushka.html",
+      "sourceHost": "pesnipodgitaru",
+      "importedAt": "2026-02-14T17:35:00.783Z",
+      "format": "cho",
+      "choFile": "songs/pesnipodgitaru/kukushka.cho"
+    },
+    {
+      "id": "35806ed3-2f69-4766-a032-6e7ead575fcd",
+      "slug": "pesnipodgitaru-pachka-sigaret",
+      "title": "ПАЧКА СИГАРЕТ",
+      "artist": "Кино",
+      "sourceUrl": "pesnipodgitaru://pachka-sigaret.html",
+      "sourceHost": "pesnipodgitaru",
+      "importedAt": "2026-02-14T17:35:00.784Z",
+      "format": "cho",
+      "choFile": "songs/pesnipodgitaru/pachka-sigaret.cho"
+    },
+    {
+      "id": "6abccd6d-e8f8-462e-a817-b1cf677ed5ff",
+      "slug": "pesnipodgitaru-progulki-po-vode-2",
+      "title": "ПРОГУЛКИ ПО ВОДЕ",
+      "artist": "Наутилус Помпилиус",
+      "sourceUrl": "pesnipodgitaru://progulki-po-vode-2.html",
+      "sourceHost": "pesnipodgitaru",
+      "importedAt": "2026-02-14T17:35:00.785Z",
+      "format": "cho",
+      "choFile": "songs/pesnipodgitaru/progulki-po-vode-2.cho"
+    },
+    {
+      "id": "f1f36344-998e-4705-8510-71a7420ca566",
+      "slug": "pesnipodgitaru-stuk",
+      "title": "СТУК",
+      "artist": "Кино",
+      "sourceUrl": "pesnipodgitaru://stuk.html",
+      "sourceHost": "pesnipodgitaru",
+      "importedAt": "2026-02-14T17:35:00.786Z",
+      "format": "cho",
+      "choFile": "songs/pesnipodgitaru/stuk.cho"
+    },
+    {
+      "id": "43a1ab70-0b1c-490b-af0f-cbad3670595b",
+      "slug": "pesnipodgitaru-trolleybus",
+      "title": "ТРОЛЛЕЙБУС",
+      "artist": "Кино",
+      "sourceUrl": "pesnipodgitaru://trolleybus.html",
+      "sourceHost": "pesnipodgitaru",
+      "importedAt": "2026-02-14T17:35:00.786Z",
+      "format": "cho",
+      "choFile": "songs/pesnipodgitaru/trolleybus.cho"
+    },
+    {
+      "id": "d318aea7-5443-43dd-a81e-e0989fb5c931",
+      "slug": "pesnipodgitaru-v-poslednyuyu-osen",
+      "title": "В ПОСЛЕДНЮЮ ОСЕНЬ",
+      "artist": "ДДТ",
+      "sourceUrl": "pesnipodgitaru://v-poslednyuyu-osen.html",
+      "sourceHost": "pesnipodgitaru",
+      "importedAt": "2026-02-14T17:35:00.788Z",
+      "format": "cho",
+      "choFile": "songs/pesnipodgitaru/v-poslednyuyu-osen.cho"
+    },
+    {
+      "id": "c998052c-22bb-43bd-aabc-94f124775206",
+      "slug": "pesnipodgitaru-v2-v-poslednyuyu-osen-v2",
+      "title": "В последнюю осень (v2)",
+      "artist": "ДДТ",
+      "sourceUrl": "pesnipodgitaru://v-poslednyuyu-osen-v2.txt",
+      "sourceHost": "pesnipodgitaru",
+      "importedAt": "2026-02-14T17:35:00.787Z",
+      "format": "cho",
+      "choFile": "songs/pesnipodgitaru/v-poslednyuyu-osen-v2.cho"
+    },
+    {
+      "id": "80e8684d-01d1-4d62-b406-7af41ae6713f",
+      "slug": "pesnipodgitaru-zvezda-po-imeni-solntse",
+      "title": "ЗВЕЗДА ПО ИМЕНИ СОЛНЦЕ",
+      "artist": "Кино",
+      "sourceUrl": "pesnipodgitaru://zvezda-po-imeni-solntse.html",
+      "sourceHost": "pesnipodgitaru",
+      "importedAt": "2026-02-14T17:35:00.788Z",
+      "format": "cho",
+      "choFile": "songs/pesnipodgitaru/zvezda-po-imeni-solntse.cho"
+    }
+  ]
+}
