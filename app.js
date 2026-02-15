@@ -1,5 +1,6 @@
 const LIBRARY_URL = "./public/library.json";
 const CHORD_INDEX_URL = "./public/chords/index.json";
+const CACHE_BUST = `${Date.now()}`;
 
 const elements = {
   songList: document.getElementById("songList"),
@@ -114,7 +115,7 @@ function bindEvents() {
 
 async function loadLibrary() {
   try {
-    const response = await fetch(LIBRARY_URL, { cache: "no-store" });
+    const response = await fetch(`${LIBRARY_URL}?v=${CACHE_BUST}`, { cache: "no-store" });
     if (!response.ok) {
       throw new Error("Не удалось прочитать public/library.json");
     }
@@ -137,7 +138,7 @@ async function loadLibrary() {
 async function loadChordIndex() {
   state.chordIndex = new Map();
   try {
-    const response = await fetch(CHORD_INDEX_URL, { cache: "no-store" });
+    const response = await fetch(`${CHORD_INDEX_URL}?v=${CACHE_BUST}`, { cache: "no-store" });
     if (!response.ok) {
       return;
     }
@@ -235,7 +236,7 @@ async function getChoText(song) {
     throw new Error("В индексе нет choFile");
   }
 
-  const response = await fetch(`./public/${song.choFile}`, { cache: "no-store" });
+  const response = await fetch(`./public/${song.choFile}?v=${CACHE_BUST}`, { cache: "no-store" });
   if (!response.ok) {
     throw new Error("Ошибка чтения cho файла");
   }
@@ -580,14 +581,38 @@ function renderChordDiagram(chord) {
   elements.chordDiagram.append(title);
 
   const indexed = state.chordIndex.get(chord);
-  const variant = indexed?.variants?.find((v) => v.available && v.file);
+  const availableVariants = collectChordVariants(chord, indexed);
 
-  if (variant) {
-    const image = document.createElement("img");
-    image.className = "chord-diagram__img";
-    image.src = `./public/${variant.file}`;
-    image.alt = `Схема аккорда ${chord}`;
-    elements.chordDiagram.append(image);
+  if (availableVariants.length) {
+    const variantsGrid = document.createElement("div");
+    variantsGrid.className = "chord-diagram__variants";
+
+    for (const variant of availableVariants.slice(0, 4)) {
+      const card = document.createElement("div");
+      card.className = "chord-diagram__variant";
+
+      const label = document.createElement("div");
+      label.className = "chord-diagram__title";
+      label.textContent = `Вариант ${variant.variant}`;
+
+      const image = document.createElement("img");
+      image.className = "chord-diagram__img";
+      image.src = `./public/${variant.file}`;
+      image.alt = `Схема аккорда ${chord}, вариант ${variant.variant}`;
+      image.loading = "lazy";
+      image.addEventListener("error", () => {
+        card.remove();
+        if (!variantsGrid.children.length) {
+          const miss = document.createElement("p");
+          miss.className = "chord-inline-empty";
+          miss.textContent = "SVG не найден";
+          elements.chordDiagram.append(miss);
+        }
+      });
+      card.append(label, image);
+      variantsGrid.append(card);
+    }
+    elements.chordDiagram.append(variantsGrid);
     return;
   }
 
@@ -595,6 +620,51 @@ function renderChordDiagram(chord) {
   miss.className = "chord-inline-empty";
   miss.textContent = "SVG не найден";
   elements.chordDiagram.append(miss);
+}
+
+function collectChordVariants(chord, indexed) {
+  const out = [];
+  const byKey = new Set();
+
+  const known = Array.isArray(indexed?.variants) ? indexed.variants : [];
+  for (const variant of known) {
+    if (!variant?.file) {
+      continue;
+    }
+    const key = `${variant.variant}:${variant.file}`;
+    if (byKey.has(key)) {
+      continue;
+    }
+    byKey.add(key);
+    if (variant.available) {
+      out.push(variant);
+    }
+  }
+
+  // Fallback: always probe common _0.._3 files by deterministic filename.
+  // This helps when index is stale but files already exist locally.
+  const base = slugifyChordFileName(chord);
+  for (const n of [0, 1, 2, 3]) {
+    const file = `chords/svg/${base}_${n}.svg`;
+    const key = `${n}:${file}`;
+    if (byKey.has(key)) {
+      continue;
+    }
+    byKey.add(key);
+    out.push({ variant: n, file, available: true });
+  }
+
+  return out.sort((a, b) => (a.variant ?? 0) - (b.variant ?? 0));
+}
+
+function slugifyChordFileName(chord) {
+  return String(chord)
+    .replace(/#/g, "sharp")
+    .replace(/\//g, "-slash-")
+    .replace(/\+/g, "plus")
+    .replace(/[^A-Za-z0-9_-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "") || "chord";
 }
 
 function setReaderMode(enabled) {

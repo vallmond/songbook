@@ -193,6 +193,20 @@ button:hover {
   margin-top: 0.25rem;
 }
 
+.chord-diagram__variants {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+}
+
+.chord-diagram__variant {
+  border: 1px solid var(--line);
+  border-radius: 0.36rem;
+  padding: 0.35rem;
+  background: #fff;
+}
+
 .viewer__controls {
   margin-top: 0.45rem;
   display: flex;

@@ -1028,22 +1028,24 @@ function extractTextFromPesniPodGitaru(html) {
     .replace(/<\/div>/gi, "\n")
     .replace(/<[^>]+>/g, "");
 
-  const pesniLines = decodeHtmlEntities(cleanedHtml)
+  const rawPesniLines = decodeHtmlEntities(cleanedHtml)
     .replace(/\r/g, "")
     .replace(/\u00a0/g, " ")
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .split("\n")
     .map(normalizePesniBodyLine)
-    .filter((line) => !isPesniNoiseLine(line))
     .map((line) => line.replace(/\s+$/g, ""))
     .filter(Boolean);
 
-  const bodyText = pesniLines
-    .slice(findPesniBodyStartIndex(pesniLines))
+  const normalizedPesniLines = trimAlternateArrangementTail(rawPesniLines, title).filter((line) => !isPesniNoiseLine(line));
+
+  const bodyTextRaw = normalizedPesniLines
+    .slice(findPesniBodyStartIndex(normalizedPesniLines))
     .join("\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+  const bodyText = trimKnownDuplicateSections(title, bodyTextRaw);
 
   if (artist && title) {
     return `${artist} - ${title}\n${bodyText}`.trim();
@@ -1269,6 +1271,74 @@ function findPesniBodyStartIndex(lines) {
   });
 
   return musicalStart === -1 ? 0 : musicalStart;
+}
+
+function trimAlternateArrangementTail(lines, title = "") {
+  if (/кукушка/i.test(title || "")) {
+    const kukushkaAltStart = lines.findIndex(
+      (line, index) =>
+        index > 24 &&
+        (/^(?:Em\s+G\s+D\s+Hm)\b/i.test(line.trim()) || /^Песен.*не написанных.*сколько\??$/i.test(line.trim())),
+    );
+    if (kukushkaAltStart !== -1) {
+      return lines.slice(0, kukushkaAltStart);
+    }
+  }
+
+  if (/группа\s+крови/i.test(title || "")) {
+    const gruppaKroviAltStart = lines.findIndex(
+      (line, index) =>
+        index > 36 &&
+        (/^(?:Em\s+Hm)\b/i.test(line.trim()) ||
+          /^Em\s+\d-я\b/i.test(line.trim()) ||
+          /^(?:Em\s+Hm\s+Em\s+Hm\s+Em)\b/i.test(line.trim())),
+    );
+    if (gruppaKroviAltStart !== -1) {
+      return lines.slice(0, gruppaKroviAltStart);
+    }
+  }
+
+  // Some pages append a full second song variant (e.g. another key/singer)
+  // after the main text. Keep only the first arrangement.
+  const altStart = lines.findIndex((line, index) => {
+    if (/\bв\s+тональности\b.*\bпоет\b/i.test(line) || /\bв\s+тональности\b.*\bпоёт\b/i.test(line)) {
+      return true;
+    }
+
+    // Fallback for pages where alternate version starts from a chord run:
+    // "Em G D Hm 2 р" / "Am C G F 2р", usually after full first variant.
+    if (
+      index > 20 &&
+      /^(?:[A-H](?:#|b)?(?:m|maj|min|sus|dim|aug|add|mmaj)?\d*\s+){3,}[A-H](?:#|b)?(?:m|maj|min|sus|dim|aug|add|mmaj)?\d*\s+\d+\s*[рp]\b/i.test(
+        line.trim(),
+      )
+    ) {
+      return true;
+    }
+
+    return false;
+  });
+  if (altStart === -1) {
+    return lines;
+  }
+  if (altStart < 16) {
+    return lines;
+  }
+  return lines.slice(0, altStart);
+}
+
+function trimKnownDuplicateSections(title, bodyText) {
+  const songTitle = String(title || "").toLowerCase();
+  let out = String(bodyText || "");
+
+  if (/группа\s+крови/.test(songTitle)) {
+    const altStart = out.search(/\nEm\s+Hm\s*\n/);
+    if (altStart !== -1) {
+      out = out.slice(0, altStart).trimEnd();
+    }
+  }
+
+  return out;
 }
 
 function isTablatureOrStringLine(value) {
