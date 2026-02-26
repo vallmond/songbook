@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-02-15T15:26:51.775Z",
+  "updatedAt": "2026-02-17T20:45:16.760Z",
   "sourceTemplate": "https://amdm.ru/cs/images/chords/svg/{chord}_{variant}.svg",
   "items": [
     {
@@ -31,6 +31,39 @@
           "variant": 3,
           "file": "chords/svg/A_3.svg",
           "sourceUrl": "https://amdm.ru/cs/images/chords/svg/A_3.svg",
+          "available": true,
+          "cached": true
+        }
+      ]
+    },
+    {
+      "name": "A#",
+      "variants": [
+        {
+          "variant": 0,
+          "file": "chords/svg/Asharp_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/A%23_0.svg",
+          "available": true,
+          "cached": true
+        },
+        {
+          "variant": 1,
+          "file": "chords/svg/Asharp_1.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/A%23_1.svg",
+          "available": true,
+          "cached": true
+        },
+        {
+          "variant": 2,
+          "file": "chords/svg/Asharp_2.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/A%23_2.svg",
+          "available": true,
+          "cached": true
+        },
+        {
+          "variant": 3,
+          "file": "chords/svg/Asharp_3.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/A%23_3.svg",
           "available": true,
           "cached": true
         }
@@ -97,6 +130,39 @@
           "variant": 3,
           "file": "chords/svg/Am_3.svg",
           "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Am_3.svg",
+          "available": true,
+          "cached": true
+        }
+      ]
+    },
+    {
+      "name": "Am7",
+      "variants": [
+        {
+          "variant": 0,
+          "file": "chords/svg/Am7_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Am7_0.svg",
+          "available": true,
+          "cached": true
+        },
+        {
+          "variant": 1,
+          "file": "chords/svg/Am7_1.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Am7_1.svg",
+          "available": true,
+          "cached": true
+        },
+        {
+          "variant": 2,
+          "file": "chords/svg/Am7_2.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Am7_2.svg",
+          "available": true,
+          "cached": true
+        },
+        {
+          "variant": 3,
+          "file": "chords/svg/Am7_3.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Am7_3.svg",
           "available": true,
           "cached": true
         }
@@ -171,6 +237,13 @@
     {
       "name": "Bm",
       "variants": [
+        {
+          "variant": 0,
+          "file": "chords/svg/Bm_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Bm_0.svg",
+          "available": true,
+          "cached": true
+        },
         {
           "variant": 1,
           "file": "chords/svg/Bm_1.svg",
@@ -250,6 +323,13 @@
       "name": "C7",
       "variants": [
         {
+          "variant": 0,
+          "file": "chords/svg/C7_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/C7_0.svg",
+          "available": true,
+          "cached": true
+        },
+        {
           "variant": 1,
           "file": "chords/svg/C7_1.svg",
           "sourceUrl": "https://amdm.ru/cs/images/chords/svg/C7_1.svg",
@@ -275,6 +355,13 @@
     {
       "name": "Cm",
       "variants": [
+        {
+          "variant": 0,
+          "file": "chords/svg/Cm_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Cm_0.svg",
+          "available": true,
+          "cached": true
+        },
         {
           "variant": 1,
           "file": "chords/svg/Cm_1.svg",
@@ -327,6 +414,13 @@
     {
       "name": "D7",
       "variants": [
+        {
+          "variant": 0,
+          "file": "chords/svg/D7_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/D7_0.svg",
+          "available": true,
+          "cached": true
+        },
         {
           "variant": 1,
           "file": "chords/svg/D7_1.svg",
@@ -386,6 +480,13 @@
     {
       "name": "Dm7",
       "variants": [
+        {
+          "variant": 0,
+          "file": "chords/svg/Dm7_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Dm7_0.svg",
+          "available": true,
+          "cached": true
+        },
         {
           "variant": 1,
           "file": "chords/svg/Dm7_1.svg",
@@ -509,6 +610,39 @@
       ]
     },
     {
+      "name": "Em7",
+      "variants": [
+        {
+          "variant": 0,
+          "file": "chords/svg/Em7_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Em7_0.svg",
+          "available": true,
+          "cached": true
+        },
+        {
+          "variant": 1,
+          "file": "chords/svg/Em7_1.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Em7_1.svg",
+          "available": true,
+          "cached": true
+        },
+        {
+          "variant": 2,
+          "file": "chords/svg/Em7_2.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Em7_2.svg",
+          "available": true,
+          "cached": true
+        },
+        {
+          "variant": 3,
+          "file": "chords/svg/Em7_3.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Em7_3.svg",
+          "available": true,
+          "cached": true
+        }
+      ]
+    },
+    {
       "name": "F",
       "variants": [
         {
@@ -544,6 +678,13 @@
     {
       "name": "F#",
       "variants": [
+        {
+          "variant": 0,
+          "file": "chords/svg/Fsharp_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/F%23_0.svg",
+          "available": true,
+          "cached": true
+        },
         {
           "variant": 1,
           "file": "chords/svg/Fsharp_1.svg",
@@ -590,6 +731,13 @@
       "name": "F7",
       "variants": [
         {
+          "variant": 0,
+          "file": "chords/svg/F7_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/F7_0.svg",
+          "available": true,
+          "cached": true
+        },
+        {
           "variant": 1,
           "file": "chords/svg/F7_1.svg",
           "sourceUrl": "https://amdm.ru/cs/images/chords/svg/F7_1.svg",
@@ -608,6 +756,13 @@
     {
       "name": "Fm",
       "variants": [
+        {
+          "variant": 0,
+          "file": "chords/svg/Fm_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Fm_0.svg",
+          "available": true,
+          "cached": true
+        },
         {
           "variant": 1,
           "file": "chords/svg/Fm_1.svg",
@@ -660,6 +815,13 @@
     {
       "name": "G7",
       "variants": [
+        {
+          "variant": 0,
+          "file": "chords/svg/G7_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/G7_0.svg",
+          "available": true,
+          "cached": true
+        },
         {
           "variant": 1,
           "file": "chords/svg/G7_1.svg",
@@ -746,6 +908,13 @@
       "name": "H",
       "variants": [
         {
+          "variant": 0,
+          "file": "chords/svg/H_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/H_0.svg",
+          "available": true,
+          "cached": true
+        },
+        {
           "variant": 1,
           "file": "chords/svg/H_1.svg",
           "sourceUrl": "https://amdm.ru/cs/images/chords/svg/H_1.svg",
@@ -772,6 +941,13 @@
       "name": "H7",
       "variants": [
         {
+          "variant": 0,
+          "file": "chords/svg/H7_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/H7_0.svg",
+          "available": true,
+          "cached": true
+        },
+        {
           "variant": 1,
           "file": "chords/svg/H7_1.svg",
           "sourceUrl": "https://amdm.ru/cs/images/chords/svg/H7_1.svg",
@@ -797,6 +973,13 @@
     {
       "name": "Hm",
       "variants": [
+        {
+          "variant": 0,
+          "file": "chords/svg/Hm_0.svg",
+          "sourceUrl": "https://amdm.ru/cs/images/chords/svg/Hm_0.svg",
+          "available": true,
+          "cached": true
+        },
         {
           "variant": 1,
           "file": "chords/svg/Hm_1.svg",

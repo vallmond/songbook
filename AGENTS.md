@@ -2,13 +2,13 @@
 
 ## Project Overview
 - Project: frontend-only guitar songbook.
-- Sources: `amdm/` and `pesnipodgitaru/` (raw source files).
+- Sources: `amdm/`, `pesnipodgitaru/`, and `mychords/` (raw source files).
 - Generated artifacts: `public/library.json`, `public/songs/**/*.cho`, `public/chords/index.json`, chord SVG cache in `public/chords/svg/`.
 - Main parser: `song-parser.mjs`.
 - Main UI renderer: `app.js`.
 
 ## Canonical Workflow
-1. Put/update raw files in `amdm/` or `pesnipodgitaru/`.
+1. Put/update raw files in `amdm/`, `pesnipodgitaru/`, or `mychords/`.
 2. Run `node scripts/sync-raw.mjs`.
 3. Reload frontend and verify target songs.
 
@@ -16,6 +16,9 @@
 - Import PesniPodGitaru pages:
   - `node scripts/import-pesnipodgitaru.mjs <url1> <url2> ...`
 - Script writes source HTML into `pesnipodgitaru/`.
+- Import MyChords pages (tries `/ru/trans` with target override support):
+  - `node scripts/import-mychords.mjs [--target=E] <url1> <url2> ...`
+- Script writes source HTML into `mychords/`.
 
 ## Parsing Notes (important)
 - CHO format is the canonical internal format.

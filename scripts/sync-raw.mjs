@@ -8,6 +8,7 @@ const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
 const amdmDir = path.resolve(projectRoot, "amdm");
 const pesniDir = path.resolve(projectRoot, "pesnipodgitaru");
+const mychordsDir = path.resolve(projectRoot, "mychords");
 const legacyRawDir = path.resolve(projectRoot, "raw");
 const publicDir = path.resolve(projectRoot, "public");
 const songsDir = path.resolve(publicDir, "songs");
@@ -44,12 +45,14 @@ const POPULAR_CHORDS = [
 
 await fs.mkdir(amdmDir, { recursive: true });
 await fs.mkdir(pesniDir, { recursive: true });
+await fs.mkdir(mychordsDir, { recursive: true });
 await fs.mkdir(songsDir, { recursive: true });
 await fs.mkdir(chordSvgDir, { recursive: true });
 
 const sources = [
   { name: "amdm", dir: amdmDir },
   { name: "pesnipodgitaru", dir: pesniDir },
+  { name: "mychords", dir: mychordsDir },
 ];
 
 if (await fileExists(legacyRawDir)) {
@@ -302,13 +305,17 @@ function dedupeKey(song) {
 function normalizeDedupeText(value) {
   return String(value || "")
     .toLowerCase()
+    .replace(/['’`"]/g, "")
+    .replace(/[^\p{L}\p{N}\s]+/gu, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
 
 function songPriority(song) {
   const hostPriority =
-    song.sourceHost === "pesnipodgitaru"
+    song.sourceHost === "mychords"
+      ? 50
+      : song.sourceHost === "pesnipodgitaru"
       ? 30
       : song.sourceHost === "amdm"
         ? 20
@@ -316,11 +323,16 @@ function songPriority(song) {
           ? 10
           : 0;
 
-  // If same song repeats in one source, prefer bigger numeric raw id (e.g. 7 over 4).
-  const idMatch = (song.sourceUrl || "").match(/\/\/(\d+)\.html$/i);
+  // If same song repeats in one source, prefer variants with explicit numeric source ids.
+  // Works for:
+  // - amdm://7.html
+  // - mychords://1100-kino-konchitsya-leto-html.html
+  const sourcePath = String(song.sourceUrl || "").replace(/^[a-z]+:\/\//i, "");
+  const idMatch = sourcePath.match(/^(\d+)(?:\D|$)/i) || sourcePath.match(/\/(\d+)(?:\D|$)/i);
   const rawId = idMatch ? Number.parseInt(idMatch[1], 10) : 0;
+  const hasNumericSlug = rawId > 0 ? 1 : 0;
 
-  return hostPriority * 100000 + rawId;
+  return hostPriority * 100000 + hasNumericSlug * 10000 + rawId;
 }
 
 async function clearSongsDir(dir) {

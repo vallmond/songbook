@@ -57,6 +57,7 @@ export function toCho({ title, artist, bodyText }, options = {}) {
   let carriedTailChords = null;
   let sectionFirstChord = "";
   let sectionLineCount = 0;
+  let sustainedSingleChord = "";
 
   for (const rawLine of lines) {
     let line = rawLine;
@@ -76,6 +77,9 @@ export function toCho({ title, artist, bodyText }, options = {}) {
         // chord and lyric lines. Keep pending chords for the next lyric.
         continue;
       }
+      if (simpleChordDistribution) {
+        sustainedSingleChord = "";
+      }
       out.push("");
       continue;
     }
@@ -93,6 +97,9 @@ export function toCho({ title, artist, bodyText }, options = {}) {
       currentSectionName = section;
       sectionFirstChord = "";
       sectionLineCount = 0;
+      if (simpleChordDistribution) {
+        sustainedSingleChord = "";
+      }
       out.push(`{c: ${section}}`);
       continue;
     }
@@ -110,6 +117,9 @@ export function toCho({ title, artist, bodyText }, options = {}) {
       currentSectionName = sectionCue.section;
       sectionFirstChord = "";
       sectionLineCount = 0;
+      if (simpleChordDistribution) {
+        sustainedSingleChord = "";
+      }
       out.push(`{c: ${sectionCue.section}}`);
       if (sectionCue.tail) {
         const sectionTailWithCarry =
@@ -149,6 +159,10 @@ export function toCho({ title, artist, bodyText }, options = {}) {
 
     if (isChordLine(trimmed)) {
       pendingChordLines.push(rawLine);
+      if (simpleChordDistribution) {
+        const chordTokens = pendingChordLines.flatMap((line) => extractChordTokens(line));
+        sustainedSingleChord = chordTokens.length === 1 ? chordTokens[0] : "";
+      }
       continue;
     }
 
@@ -251,6 +265,9 @@ export function toCho({ title, artist, bodyText }, options = {}) {
           }
           sectionLineCount += 1;
         }
+        if (simpleChordDistribution) {
+          sustainedSingleChord = "";
+        }
         pendingChordLines = [];
         continue;
       }
@@ -293,6 +310,9 @@ export function toCho({ title, artist, bodyText }, options = {}) {
           }
           sectionLineCount += 1;
         }
+        if (simpleChordDistribution) {
+          sustainedSingleChord = singleTokenLines.length === 1 ? singleTokenLines[0] : "";
+        }
       } else if (simpleChordDistribution && pendingChordLines.length === 1) {
         const spreadTokens = extractChordTokens(pendingChordLines[0]);
         const mergedSpread = cleanupMergedLyricArtifacts(mergeSimpleChordSequenceWithLyricsDistributed(spreadTokens, line));
@@ -316,6 +336,9 @@ export function toCho({ title, artist, bodyText }, options = {}) {
           }
           sectionLineCount += 1;
         }
+        if (simpleChordDistribution) {
+          sustainedSingleChord = spreadTokens.length === 1 ? spreadTokens[0] : "";
+        }
       } else {
         const mergedChordLine = combineChordLines(pendingChordLines);
         const mergedComplex = cleanupMergedLyricArtifacts(mergeChordLineWithLyrics(mergedChordLine, line));
@@ -338,6 +361,9 @@ export function toCho({ title, artist, bodyText }, options = {}) {
             sectionFirstChord = nextSection.firstChord;
           }
           sectionLineCount += 1;
+        }
+        if (simpleChordDistribution) {
+          sustainedSingleChord = "";
         }
       }
       pendingChordLines = [];
@@ -380,6 +406,11 @@ export function toCho({ title, artist, bodyText }, options = {}) {
       currentSectionName = "Куплет";
       sectionFirstChord = "";
       sectionLineCount = 0;
+    }
+
+    if (simpleChordDistribution && sustainedSingleChord && !line.includes("[") && isLikelyPureLyricLine(line)) {
+      out.push(`[${sustainedSingleChord}]${line}`);
+      continue;
     }
 
     out.push(line);
@@ -961,6 +992,10 @@ function cleanSongTitle(title) {
 }
 
 function extractTextFromHtmlChordSheet(html, sourceLabel = "") {
+  if (/mychords\.net/i.test(html) || /mychords/i.test(sourceLabel)) {
+    return extractTextFromMyChords(html);
+  }
+
   if (/pesnipodgitaru\.ru/i.test(html) || /pesnipodgitaru/i.test(sourceLabel)) {
     return extractTextFromPesniPodGitaru(html);
   }
@@ -988,6 +1023,359 @@ function extractTextFromHtmlChordSheet(html, sourceLabel = "") {
   }
 
   return `${title}\n${decoded}`;
+}
+
+function extractTextFromMyChords(html) {
+  const metaName = normalizeHtmlText(html.match(/<meta[^>]+itemprop="name"[^>]+content="([^"]+)"/i)?.[1] || "");
+  const headingText = normalizeHtmlText(
+    html.match(/<h1[^>]*class="[^"]*b-title__main[^"]*"[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ||
+      html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] ||
+      "",
+  );
+
+  const heading = metaName || headingText;
+  const split = splitHeading(heading);
+  const artist = cleanMyChordsArtist(split.artist || "");
+  const title = cleanSongTitle(split.title || heading);
+
+  const wordsBlock = extractDivBlockByClass(html, "w-words__text");
+  const inner = stripOuterDiv(wordsBlock || "");
+  const lines = parseMyChordsBodyLines(inner)
+    .map(normalizeMyChordsLine)
+    .map((line) => line.replace(/\s+$/g, ""))
+    .filter((line, idx, arr) => !(line === "" && arr[idx - 1] === ""))
+    .map((line) => line.replace(/^\s+$/g, ""));
+
+  const bodyText = lines.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+
+  if (artist && title) {
+    return `${artist} - ${title}\n${bodyText}`.trim();
+  }
+  if (title) {
+    return `${title}\n${bodyText}`.trim();
+  }
+  return bodyText;
+}
+
+function parseMyChordsBodyLines(innerHtml) {
+  if (!innerHtml) {
+    return [];
+  }
+
+  const out = [];
+  const blocks = splitTopLevelDivBlocks(innerHtml);
+
+  for (const block of blocks) {
+    const blockClass = (block.match(/class="([^"]+)"/i)?.[1] || "").toLowerCase();
+    const content = stripOuterDiv(block);
+    const plain = decodeHtmlEntities(content.replace(/<[^>]+>/g, ""))
+      .replace(/\u00a0/g, " ")
+      .trim();
+
+    if (!plain) {
+      out.push("");
+      continue;
+    }
+
+    if (blockClass.includes("pline")) {
+      const sublines = extractTopLevelSublineContents(content);
+      if (sublines.length >= 2) {
+        const chordSublineHtml = sublines[0];
+        const lyricSublineHtml = sublines[1];
+        const lyric = toMyChordsPlainLine(lyricSublineHtml, true).replace(/\s+$/g, "");
+        const chordItems = extractMyChordsWithPositions(chordSublineHtml);
+
+        if (chordItems.length && lyric) {
+          const inline = mergeMyChordsBySourceSpacing(chordItems, lyric);
+          out.push(inline);
+          continue;
+        }
+
+        if (chordItems.length && !lyric) {
+          out.push(chordItems.map((item) => `[${item.chord}]`).join(" "));
+          continue;
+        }
+
+        if (lyric) {
+          out.push(lyric);
+        }
+        continue;
+      }
+    }
+
+    out.push(toMyChordsPlainLine(content, true).trimEnd());
+  }
+
+  return out;
+}
+
+function extractTopLevelSublineContents(html) {
+  const source = String(html || "");
+  const out = [];
+  let cursor = 0;
+
+  while (cursor < source.length) {
+    const start = source.indexOf("<span", cursor);
+    if (start === -1) {
+      break;
+    }
+
+    const openEnd = source.indexOf(">", start);
+    if (openEnd === -1) {
+      break;
+    }
+
+    const openTag = source.slice(start, openEnd + 1);
+    const classes = openTag.match(/class="([^"]+)"/i)?.[1] || "";
+    if (!/\bsubline\b/i.test(classes)) {
+      cursor = openEnd + 1;
+      continue;
+    }
+
+    const spanMatcher = /<\/?span\b[^>]*>/gi;
+    spanMatcher.lastIndex = openEnd + 1;
+    let depth = 1;
+    let endStart = -1;
+    let match = spanMatcher.exec(source);
+
+    while (match) {
+      if (/^<span\b/i.test(match[0])) {
+        depth += 1;
+      } else if (/^<\/span/i.test(match[0])) {
+        depth -= 1;
+      }
+
+      if (depth === 0) {
+        endStart = match.index;
+        cursor = spanMatcher.lastIndex;
+        break;
+      }
+
+      match = spanMatcher.exec(source);
+    }
+
+    if (endStart === -1) {
+      break;
+    }
+
+    out.push(source.slice(openEnd + 1, endStart));
+  }
+
+  return out;
+}
+
+function toMyChordsPlainLine(htmlLine, keepSpaces) {
+  let line = String(htmlLine || "")
+    .replace(/<span[^>]*class="[^"]*\bb-accord__symbol\b[^"]*"[^>]*>([\s\S]*?)<\/span>/gi, "$1")
+    .replace(/<span[^>]*class="[^"]*\bb-lr-section\b[^"]*"[^>]*>([\s\S]*?)<\/span>/gi, "$1")
+    .replace(/<\/?span[^>]*>/gi, "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, "");
+
+  line = decodeHtmlEntities(line).replace(/\u00a0/g, " ").replace(/\t/g, " ");
+
+  if (!keepSpaces) {
+    line = line.replace(/\s+/g, " ");
+  }
+
+  return line;
+}
+
+function splitTopLevelDivBlocks(html) {
+  const out = [];
+  const source = String(html || "");
+  let cursor = 0;
+
+  while (cursor < source.length) {
+    const start = source.indexOf("<div", cursor);
+    if (start === -1) {
+      break;
+    }
+
+    const tagMatcher = /<\/?div\b[^>]*>/gi;
+    tagMatcher.lastIndex = start;
+
+    let depth = 0;
+    let end = -1;
+    let match = tagMatcher.exec(source);
+    while (match) {
+      const token = match[0];
+      if (/^<div\b/i.test(token)) {
+        depth += 1;
+      } else if (/^<\/div/i.test(token)) {
+        depth -= 1;
+      }
+
+      if (depth === 0) {
+        end = tagMatcher.lastIndex;
+        break;
+      }
+
+      match = tagMatcher.exec(source);
+    }
+
+    if (end === -1) {
+      break;
+    }
+
+    out.push(source.slice(start, end));
+    cursor = end;
+  }
+
+  return out;
+}
+
+function extractDivBlockByClass(html, className) {
+  const classPattern = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const startRegex = new RegExp(`<div[^>]*class="[^"]*\\b${classPattern}\\b[^"]*"[^>]*>`, "i");
+  const startMatch = startRegex.exec(html);
+  if (!startMatch || startMatch.index === undefined) {
+    return "";
+  }
+
+  const start = startMatch.index;
+  const tagMatcher = /<\/?div\b[^>]*>/gi;
+  tagMatcher.lastIndex = start;
+
+  let depth = 0;
+  let end = -1;
+  let match = tagMatcher.exec(html);
+  while (match) {
+    const token = match[0];
+    if (/^<div\b/i.test(token)) {
+      depth += 1;
+    } else if (/^<\/div/i.test(token)) {
+      depth -= 1;
+    }
+
+    if (depth === 0) {
+      end = tagMatcher.lastIndex;
+      break;
+    }
+
+    match = tagMatcher.exec(html);
+  }
+
+  if (end === -1) {
+    return "";
+  }
+
+  return html.slice(start, end);
+}
+
+function stripOuterDiv(blockHtml) {
+  const input = String(blockHtml || "");
+  const openEnd = input.indexOf(">");
+  const closeStart = input.lastIndexOf("</div>");
+  if (openEnd === -1 || closeStart === -1 || closeStart <= openEnd) {
+    return input;
+  }
+  return input.slice(openEnd + 1, closeStart);
+}
+
+function cleanMyChordsArtist(value) {
+  const cleaned = String(value || "").replace(/\s+/g, " ").trim();
+  if (!cleaned) {
+    return "";
+  }
+
+  if (/^nautilus pompilius$/i.test(cleaned)) {
+    return "Наутилус Помпилиус";
+  }
+  if (/^kino$/i.test(cleaned)) {
+    return "Кино";
+  }
+
+  return cleaned;
+}
+
+function normalizeMyChordsLine(rawLine) {
+  const line = String(rawLine || "");
+  const trimmed = line.trim();
+
+  const sectionMatch = trimmed.match(
+    /^\|?\s*(к(?:уплет|ода)|припев|вступление|проигрыш|соло|финал|бридж)\s*(\d+)?\s*\|?\s*:?\s*(.*)$/i,
+  );
+  if (sectionMatch) {
+    const section = (sectionMatch[1] || "").trim();
+    const tailRaw = (sectionMatch[3] || "").trim();
+    const tail = /^(?:x?\d+|(?:\d+\s*раз(?:а|)?)|раза)\b/i.test(tailRaw) ? "" : tailRaw;
+    const mappedSection =
+      /^финал$/i.test(section) ? "Кода" : section.charAt(0).toUpperCase() + section.slice(1).toLowerCase();
+    return tail ? `${mappedSection}: ${tail}` : `${mappedSection}:`;
+  }
+
+  return line;
+}
+
+function normalizeMyChordsAlignedPair(chordLineRaw, lyricLineRaw) {
+  const chordLine = String(chordLineRaw || "");
+  const lyricLine = String(lyricLineRaw || "");
+
+  const chordIndent = chordLine.match(/^\s*/)?.[0].length || 0;
+  const lyricIndent = lyricLine.match(/^\s*/)?.[0].length || 0;
+  const commonIndent = Math.min(chordIndent, lyricIndent);
+
+  if (commonIndent <= 0) {
+    return { chordLine, lyricLine };
+  }
+
+  return {
+    chordLine: chordLine.slice(commonIndent),
+    lyricLine: lyricLine.slice(commonIndent),
+  };
+}
+
+function extractMyChordsWithPositions(sublineHtml) {
+  const source = String(sublineHtml || "");
+  const out = [];
+  const pattern = /<span[^>]*class="[^"]*\bb-accord__symbol\b[^"]*"[^>]*>([\s\S]*?)<\/span>/gi;
+
+  let cursor = 0;
+  let visiblePos = 0;
+  let match = pattern.exec(source);
+  while (match) {
+    const before = source.slice(cursor, match.index);
+    visiblePos += visibleLengthFromHtml(before);
+
+    const chordText = decodeHtmlEntities((match[1] || "").replace(/<[^>]+>/g, "")).trim();
+    const chord = normalizeChordLikeToken(chordText);
+    if (isChordToken(chord)) {
+      out.push({ chord, pos: visiblePos });
+    }
+
+    cursor = pattern.lastIndex;
+    match = pattern.exec(source);
+  }
+
+  return out;
+}
+
+function visibleLengthFromHtml(html) {
+  const plain = decodeHtmlEntities(String(html || "").replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, ""));
+  return plain.length;
+}
+
+function mergeMyChordsBySourceSpacing(chordItems, lyricLine) {
+  const text = String(lyricLine || "");
+  if (!chordItems.length) {
+    return text;
+  }
+
+  const items = chordItems.map((item) => ({ chord: item.chord, pos: item.pos }));
+  items.sort((a, b) => a.pos - b.pos);
+
+  let out = "";
+  let cursor = 0;
+  for (let i = 0; i < items.length; i += 1) {
+    const pos = Math.min(Math.max(0, items[i].pos), text.length);
+    out += text.slice(cursor, pos);
+    out += `[${items[i].chord}]`;
+    cursor = pos;
+  }
+  out += text.slice(cursor);
+
+  return out;
 }
 
 function extractTextFromPesniPodGitaru(html) {
